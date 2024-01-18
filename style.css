@@ -1,0 +1,59 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    color: #333;
+    background-color: #e9ecef;
+}
+
+header {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+}
+
+#statusBlock {
+    text-align: center;
+    margin-top: 40px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.1);
+    border-radius: 10px;
+    background-color: white;
+    padding: 20px;
+    margin: 20px;
+}
+
+#status {
+    font-size: 40px;
+    margin-bottom: 0;
+}
+#status.açik {
+    color: green;
+}
+#status.kapali {
+    color: red;
+}
+
+#countdownTimer {
+    font-size: 24px;
+    color: #666;
+}
+
+@media only screen and (max-width: 600px) {
+    #status {
+        font-size: 30px;
+    }
+
+    #countdownTimer {
+        font-size: 18px;
+    }
+}
+
+.alert {
+    color: red;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+    text-align: center;
+}
