@@ -70,7 +70,7 @@ function nextWorkingDay(now) {
 }
 
 function durationToString(duration) {
-    return duration.hours() + ' saat ' + duration.minutes() + ' dakika ' + duration.seconds() + ' saniye';
+    return duration.days() + ' gün ' + duration.hours() + ' saat ' + duration.minutes() + ' dakika ' + duration.seconds() + ' saniye';
 }
 
 function myTimer() {
