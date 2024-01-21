@@ -75,7 +75,7 @@ function durationToString(duration) {
 
 function myTimer() {
     let status = bistStatus();
-    $('#status').html(status.currentStatus).addClass(status.currentStatus.toLowerCase());;
+    $('#status').html(status.currentStatus).addClass(status.currentStatus.toLowerCase());
     $('#nextStatus').html(status.nextStatus);
     $('#timeUntilNextStatus').html(status.timeUntilNextStatus);
 }
