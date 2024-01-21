@@ -10,7 +10,7 @@ const earlyCloseDates = [
 function bistStatus(currentDateISOString) {
 
     let now = moment(currentDateISOString).tz('Europe/Istanbul');
-    let timeToWait = 0;
+    let timeToWait ;
     if (!isWorkingDay(now)) {
         let nextOpenDate = nextWorkingDay(now).hour(10).minute(0).second(0);
         timeToWait = moment.duration(nextOpenDate.diff(now, 'seconds'), 'seconds');
