@@ -10,7 +10,7 @@ const earlyCloseDates = [
 function bistStatus(currentDateISOString) {
 
     let now = moment(currentDateISOString).tz('Europe/Istanbul');
-    let timeToWait ;
+    let timeToWait;
     if (!isWorkingDay(now)) {
         let nextOpenDate = nextWorkingDay(now).hour(10).minute(0).second(0);
         timeToWait = moment.duration(nextOpenDate.diff(now, 'seconds'), 'seconds');
@@ -74,9 +74,8 @@ function durationToString(duration) {
 }
 
 function myTimer() {
-    var status = bistStatus();
-    $('#status').html(status.currentStatus);
-    $('#status').addClass(status.currentStatus.toLowerCase());
+    let status = bistStatus();
+    $('#status').html(status.currentStatus).addClass(status.currentStatus.toLowerCase());;
     $('#nextStatus').html(status.nextStatus);
     $('#timeUntilNextStatus').html(status.timeUntilNextStatus);
 }
