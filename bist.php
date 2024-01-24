@@ -1,62 +1,99 @@
-<link rel="stylesheet" href="bist-css.css">
 <?php
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+error_reporting(E_ALL);
 
-$filename = 'bist.html';
-if (file_exists($filename)) {
-    $file_creation_date = filectime($filename);
-    $datea = date("Y-m-d", $file_creation_date);
-    if(date("Y-m-d") > $datea){
-        $req = file_get_contents('https://finans.mynet.com/');
-        file_put_contents('bist.html', $req);
+include 'simple_html_dom.php';
+
+function get_bist(){
+    $html = file_get_html('https://finans.mynet.com');
+
+    $array = [];
+    $DOM = new DOMDocument();
+    foreach($html->find(".session-statistics") as $element)  {
+        $DOM->loadHTML($element);
+        $Detail = $DOM->getElementsByTagName('td');
+        $elementArr = [];
+        foreach($Detail as $NodeHeader)
+        {
+            $elementArr[] = trim($NodeHeader->textContent);
+        }
+        array_push($array, $elementArr);
     }
-}else{
-    $req = file_get_contents('https://finans.mynet.com/');
-    file_put_contents('bist.html', $req);
+
+    $mergedArray = [];
+    $artanArr = array_chunk($array[0], 4);
+    $azalanArr = array_chunk($array[1], 4);
+    $islemArr = array_chunk($array[2], 3);
+
+    array_push($mergedArray, $artanArr);
+    array_push($mergedArray, $azalanArr);
+    array_push($mergedArray, $islemArr);
+
+    $jsonData = json_encode($mergedArray, JSON_PRETTY_PRINT);
+    file_put_contents("bist.json", $jsonData);
 }
 
-$request = file_get_contents('bist.html');
-$data=explode('<div class="row session-statistics-row">', $request);
-$data=explode('</div>', $data[1]);
 
-$table_1=explode('<div class="table-heading-type-1">', $data[0]);
-$table_1=explode('</div>', $table_1[1]);
+if(!file_exists("bist.json")){
+    get_bist();
+}else{
+    $file_time = filectime("bist.json");
+    if(date("Y-m-d") > date("Y-m-d", $file_time)){
+        get_bist();
+    }
 
-$table_11=explode('<span>', $table_1[0]);
-$table_11=explode('</span>', $table_11[1]);
+}
 
-$table_2=explode('<div class="table-heading-type-1">', $data[3]);
-$table_2=explode('</div>', $table_2[1]);
-
-$table_22=explode('<span>', $table_2[0]);
-$table_22=explode('</span>', $table_22[1]);
+$get_json = file_get_contents("bist.json");
+$get_bist_array = json_decode($get_json, true);
 ?>
-<div class="row">
-    <div class="col-12">
-        <div class="row session-statistics-row">
-            <div class="col-12 col-lg-4">
-                <div class="card data-type-1 <?php if($table_11[0] == "Azalan"){ echo "data-status-down";} ?> data-type-hisse">
-                    <div class="table-heading-type-1">
-                        <?php print_r($table_1[0]); ?>
-                    </div>
-                    <?php print_r($data[1]); ?>
-                </div>
-            </div>
-            <div class="col-12 col-lg-4">
-                <div class="card data-type-1 <?php if($table_22[0] == "Azalan"){ echo "data-status-down";} ?> data-type-hisse">
-                    <div class="table-heading-type-1">
-                        <?php print_r($table_2[0]); ?>
-                    </div>
-                    <?php print_r($data[4]); ?>
-                </div>
-            </div>
-            <div class="col-12 col-lg-4">
-                <div class="card data-type-1 data-type-hisse">
-                    <div class="table-heading-type-1">
-                        <span>İşlem</span>
-                    </div>
-                    <?php print_r($data[7]); ?>
-                </div>
-            </div>
-        </div>
-    </div>
+<div class="tables">
+<?php
+foreach($get_bist_array as $gbaKey => $gba){
+    echo '<table>';
+    if($gbaKey == 0){
+        echo '<tr><td>ARTAN</td><td>Fiyat</td><td>Fark%</td><td>Saat</td></tr>';
+    }
+
+    if($gbaKey == 1){
+        echo '<tr><td>AZALAN</td><td>Fiyat</td><td>Fark%</td><td>Saat</td></tr>';
+    }
+
+    if($gbaKey == 2){
+        echo '<tr><td>İŞLEM</td><td>Hacim</td><td>Saat</td></tr>';
+    }
+
+    foreach($gba as $gb){
+        echo '<tr>';
+        foreach($gb as $g){
+            echo '<td>'.$g.'</td>';
+        }
+        echo '</tr>';
+    }
+    echo '</table>';
+}
+?>
 </div>
+<style>
+    .tables{
+        display:flex;
+        gap:25px;
+    }
+
+    .tables table{
+        width:calc(calc(100%/3) - 25px);
+        background:#fff;
+        color:#000;
+        padding:15px;
+    }
+
+    .tables table tr td{
+        padding:3px;
+    }
+
+    .tables table tr:first-child td{
+        font-weight: bold;
+    }
+</style>
+
