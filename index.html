@@ -52,6 +52,7 @@
             <p id="status">?</p>
             <p id="countdownTimer"><span id="timeUntilNextStatus">?</span> sonra BIST <span id="nextStatus">?</span> olacaktır.</p>
         </div>
+        <div class="bist-result"></div>
     </main>
 
 	<script type="text/javascript" src="main.js"></script>
@@ -59,5 +60,13 @@
         updateStatus();
 		setInterval(updateStatus, 1000);
 	</script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready( function (){
+            $.get("bist.php", function(data, status){
+                $('.bist-result').html(data);
+            });
+        });
+    </script>
 </body>
 </html>
