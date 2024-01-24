@@ -60,13 +60,18 @@
         updateStatus();
 		setInterval(updateStatus, 1000);
 	</script>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready( function (){
-            $.get("bist.php", function(data, status){
-                $('.bist-result').html(data);
-            });
-        });
+     <script>
+        var xhr = new XMLHttpRequest();
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                var data = xhr.responseText;
+                document.querySelector('.bist-result').innerHTML = data;
+            }
+        };
+
+        xhr.open("GET", "bist.php", true);
+        xhr.send();
     </script>
 </body>
 </html>
